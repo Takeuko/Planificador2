@@ -1,0 +1,14 @@
+{
+  "name": "socket-server",
+  "version": "1.0.0",
+  "description": "el mejor server de todos",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "ionic"
+  ],
+  "author": "edo",
+  "license": "MIT"
+}

@@ -1,0 +1,90 @@
+<ion-header>
+  
+    <ion-navbar>
+      <ion-title>¡Regístrate!</ion-title>
+    </ion-navbar>
+  
+  </ion-header>
+  
+  
+  <ion-content>
+  
+   <ion-list [formGroup]="project">
+  
+  
+      <ion-item>
+        <ion-label floating>Nombre del Proyecto</ion-label>
+        <ion-input formControlName="name" type="text"></ion-input>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label floating>Objetivo General</ion-label>
+        <ion-input formControlName="purpose" type="text"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>Beneficios</ion-label>
+        <ion-textarea formControlName="benefits" type="text"></ion-textarea>
+      </ion-item>
+      
+      <div formArrayName="objectives">
+        <div *ngFor="let objective of objectives.controls; let i=index" [formGroupName]="i" >
+            <ion-item>
+              <ion-label color="primary"><b>Objetivo # {{i + 1}}</b></ion-label>
+            </ion-item>
+            <div>
+
+                <ion-item>
+                    <ion-label floating>Objetivo</ion-label>
+                    <ion-input formControlName="name" type="text"></ion-input>
+                  </ion-item>
+
+                  <ion-item>
+                      <ion-label floating>Fecha de Inicio</ion-label>
+                      <ion-datetime displayFormat="DD/MM/YYYY" formControlName="beggingDate"></ion-datetime>
+                  </ion-item>
+
+                    <ion-item>
+                        <ion-label floating>Fecha de Fin</ion-label>
+                        <ion-datetime displayFormat="DD/MM/YYYY" formControlName="endDate"></ion-datetime>
+                    </ion-item>
+
+                    <button ion-button color="danger" (click) = "deleteObjective(i)">Eliminar</button>
+
+            </div>
+        </div>
+      </div>
+
+      <button ion-button color="primary" (click) = "addObjective()">Agregar objetivo</button>
+      <button ion-button color="primary" (click) = "Search()">Agregar Miembro</button>
+
+
+      <div>
+          
+        <ion-item>
+          <ion-label floating>Miembros</ion-label>
+          <ion-input type="text"></ion-input>
+        </ion-item>
+
+      </div>
+
+
+      
+      <ion-item>
+          <ion-label floating>Fecha de Inicio del Proyecto</ion-label>
+          <ion-datetime displayFormat="DD/MM/YYYY" formControlName="begginingDate"></ion-datetime>
+      </ion-item>
+
+      <ion-item>
+          <ion-label floating>Fecha de Fin del Proyecto</ion-label>
+          <ion-datetime displayFormat="DD/MM/YYYY" formControlName="endDate"></ion-datetime>
+      </ion-item>
+      
+        <button ion-button color="primary" block (click) = "addMember(member)">Registrar</button>
+  
+    </ion-list>
+  
+  
+  
+  </ion-content>
+  
