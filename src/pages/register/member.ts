@@ -8,4 +8,5 @@ export class Member
     username:string;
     password:string;
     api_token:string;
+    
 }

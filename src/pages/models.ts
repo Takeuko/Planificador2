@@ -20,4 +20,11 @@ export class Objective
     begginingDate:Date;
     endDate:Date;
     manager:Member;
+    tasks:Task[];
+}
+
+export class Task
+{
+    name:string;
+    manager:Member;
 }

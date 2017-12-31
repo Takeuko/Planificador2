@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, Slides, Chip, ModalController, Modal } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators, FormArray} from '@angular/forms';
 import { Http, Headers } from '@angular/http';
 import { Project, Objective} from '../models';
@@ -9,13 +9,17 @@ import 'rxjs/add/operator/toPromise';
 import { Observable }        from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
 
+
 // Observable class extensions
 import 'rxjs/add/observable/of';
 
 // Observable operators
 import 'rxjs/add/operator/catch';
+
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
+import { Element } from '@angular/compiler';
+import { removeArrayItem } from 'ionic-angular/util/util';
 
 
 /**
@@ -30,50 +34,94 @@ import 'rxjs/add/operator/distinctUntilChanged';
   selector: 'page-project-register',
   templateUrl: 'project-register.html',
 })
-export class ProjectRegisterPage implements OnInit
+export class ProjectRegisterPage
 {
+  Chips: Member[];
+
   searchUrl:string='http://localhost/planificador-backend/public/members/';
-  memberList: Observable<Member[]>;
+  memberList: any;
+  miembrosAñadidos: any;
+  nuevoObjetivo:Objective;
   private searchTerms = new Subject<string>();
+  slideActual:number;
+
+  @ViewChild(Slides) Slides;
+  Project:Project;
+  project:FormGroup;
+  constructor(public navCtrl: NavController, public navParams: NavParams, public FB : FormBuilder, private http:Http, private modal:ModalController) 
+  {
+    this.Chips=[];
+    this.nuevoObjetivo=new Objective();
+    this.Project=new Project();
+    this.Project.members=[];
+    this.Project.objectives=[];
+    this.project=this.createMyForm();
+    this.setMembers(this.Project.members);
+    this.setObjectives(this.Project.objectives);
+    
+  }
 
   buscar(term: string): void 
   {
     this.searchTerms.next(term);
   }
-
-  Project:Project;
-  project:FormGroup;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public FB : FormBuilder, private http:Http) 
+  
+  ventanaObjetivo(objetivoParametro:Objective)
   {
-    this.Project=new Project();
-    this.Project.objectives=[];
-    this.project=this.createMyForm();
-    this.setObjectives(this.Project.objectives);
+    const paginaObjetivo: Modal = this.modal.create('ObjetivoPage', {miembros: this.project.get('miembros').value, objetivo:objetivoParametro});
+    paginaObjetivo.present();
 
+
+    paginaObjetivo.onDidDismiss((data)=>
+    {
+      if(data!==undefined)
+      {
+
+        const objective:Objective=new Objective();
+        objective.name=data.nombre;
+        objective.manager=data.encargado;
+        objective.tasks=data.tareas;
+        
+        this.objectives.push(this.createObjective(objective));
+        console.log(this.project.value);
+      }
+
+
+    });
   }
 
-  ngOnInit()
+  ionViewDidLoad()
   {
-    this.memberList = this.searchTerms
-    .debounceTime(300)        // wait 300ms after each keystroke before considering the term
-    .distinctUntilChanged()   // ignore if next search term is same as previous
-    .switchMap(term => term   // switch to new observable each time the term changes
-      // return the http search observable
-      ? this.search(term)
-      // or the observable of empty heroes if there was no search term
-      : Observable.of<Member[]>([]))
-    .catch(error => {
-      // TODO: add real error handling
-      console.log(error);
-      return Observable.of<Member[]>([]);
-    });
+    this.Slides.lockSwipeToNext(true);
+    this.Slides.lockSwipeToPrev(true);
+  }
+
+  goToSlide()
+  {
+    this.Slides.lockSwipeToNext(false);
+    let slideActual=this.Slides.getActiveIndex();
+    this.Slides.slideTo(slideActual+1, 350);
+    this.Slides.lockSwipeToNext(true);
+  }
+
+  goBack()
+  {
+    this.Slides.lockSwipeToPrev(false);
+    let slideActual=this.Slides.getActiveIndex();
+    this.Slides.slideTo(slideActual-1, 350);
+    this.Slides.lockSwipeToPrev(true);
   }
   
   search(term: string) 
   {
-    return this.http
-               .get(this.searchUrl+term)
-               .map(response => response.json());
+    this.http
+    .get(this.searchUrl+term)
+    .toPromise()
+    .then(response => 
+    {
+      this.memberList=response.json();
+    });
+
   }
 
   public get objectives(): FormArray {
@@ -81,31 +129,41 @@ export class ProjectRegisterPage implements OnInit
   };
 
   public get members(): FormArray {
-    return this.project.get('members') as FormArray;
+    return this.project.get('miembros') as FormArray;
   };
 
   goToSearch()
   {
+  
     this.navCtrl.push(SearchPage);
   }
+
 
   private createMyForm()
   {
 	  return this.FB.group
 	  ({
-	    name: ['', [Validators.minLength(5), Validators.required]],
-	    benefits: ['', Validators.required],
-	    comments: ['', Validators.required],
+	    nombre: ['', [Validators.minLength(5), Validators.required]],
+      descripcion: ['', Validators.required],
+      beneficiosC: ['', Validators.required],
+      beneficiosOL: ['', Validators.required],
+      estudio: ['', Validators.required],
+      notas: ['', Validators.required],
+      presupuesto: [null,Validators.required],
+      username:[''],
+      miembros:this.FB.array([]),
+      objectives:this.FB.array([])/*,
       prev_inv: ['', Validators.email],
-      objectives:this.FB.array([]),
+     
       members:this.FB.array([]),
 	    purpose: ['', Validators.required],
       leader: [null, Validators.required],
       begginingDate:[null, Validators.required],
-      endDate:[null, Validators.required],
+      endDate:[null, Validators.required],*/
 	   });
   }
 
+  
 
   setObjectives(objectives: Objective[]) 
   {
@@ -118,22 +176,58 @@ export class ProjectRegisterPage implements OnInit
   {
     const addressFGs = members.map(address => this.FB.group(address));
     const addressFormArray = this.FB.array(addressFGs);
-    this.project.setControl('members', addressFormArray);
+    this.project.setControl('miembros', addressFormArray);
   }
 
-  addObjective()
+  /*addObjective()
   {
     this.objectives.push(this.createObjective());
+
+  }*/
+
+
+  createObjective(objective:Objective) :  FormGroup 
+  {
+    return this.FB.group({
+            name: [objective.name],
+            manager:[objective.manager],
+            tasks:[objective.tasks]
+    });
   }
 
 
-  createObjective() :  FormGroup 
+  MiembroExiste(miembro:Member)
+  {
+    for(var i = 0;i<this.project.get('miembros').value.length;i++) { 
+      if(this.project.get('miembros').value[i].id ===miembro.id)
+      {
+        return true;
+      }
+   } 
+   return false;
+  }
+
+  EliminarMiembro(i:number)
+  {
+    this.members.removeAt(i);
+  }
+
+  AgregarMiembro(member: any)
+  {
+    this.members.push(this.CrearMiembro(member));
+    this.Chips.push(member.id);
+    
+  }
+
+  CrearMiembro(member: any) :  FormGroup 
   {
     return this.FB.group({
-            name: ['', Validators.required],
-            beggingDate: [null, Validators.required],
-            endDate: [null, Validators.required],
-            manager:[null, Validators.required]
+            nombre: [member.name, Validators.required],
+            apellido: [member.lastname, Validators.required],
+            username: [member.username, Validators.required],
+            id:[member.id, Validators.required],
+
+
     });
   }
 

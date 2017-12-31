@@ -1,15 +1,129 @@
 <ion-header>
   
     <ion-navbar>
-      <ion-title>¡Regístrate!</ion-title>
+      <ion-title>¡Regístra tu Proyecto!</ion-title>
     </ion-navbar>
-  
+<!--
+    <ion-segment [(ngModel)]="Pasos">
+      <ion-segment-button value="paso1">Paso 1</ion-segment-button>
+      <ion-segment-button value="paso2">Paso 2</ion-segment-button>
+      <ion-segment-button value="paso3">Paso 3</ion-segment-button>
+    </ion-segment>
+  -->
   </ion-header>
   
-  
+
   <ion-content>
-  
-   <ion-list [formGroup]="project">
+      <ion-slides #Slides pager="true" [formGroup]="project" spaceBetween="100">
+          <ion-slide>
+            <ion-item>
+              <ion-label floating>Nombre del proyecto</ion-label>
+              <ion-input formControlName="nombre" type="text"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label floating>Descripcion</ion-label>
+                <ion-textarea formControlName="descripcion" type="text"></ion-textarea>
+              </ion-item>
+            <button [disabled]="project.get('nombre').invalid || project.get('descripcion').invalid" ion-button block color="primary" (click)="goToSlide()">Continuar</button>
+            
+          </ion-slide>
+            <ion-slide>
+                <ion-item>
+                    <ion-label floating>Beneficios para la Comunidad</ion-label>
+                    <ion-textarea formControlName="beneficiosC" type="text"></ion-textarea>
+                  </ion-item>
+                  <ion-item>
+                      <ion-label floating>Beneficios para la OL</ion-label>
+                      <ion-textarea formControlName="beneficiosOL" type="text"></ion-textarea>
+                  </ion-item>
+                  <ion-item>
+                      <ion-label  floating>Estudio de Factibilidad</ion-label>
+                      <ion-textarea formControlName="estudio" type="text"></ion-textarea>
+                  </ion-item>
+              <button ion-button [disabled]="project.get('beneficiosC').invalid || project.get('beneficiosOL').invalid || project.get('estudio').invalid" block color="primary" (click)="goToSlide()">Continuar</button>
+              <button ion-button block color="danger" (click)="goBack()">Atrás</button>
+            </ion-slide>
+          <ion-slide>
+            <ion-item>
+              <span>
+                Agregar Miembros al Proyecto
+              </span>
+            </ion-item>
+            <ion-item>
+                <ion-label floating>Nombre de Usuario</ion-label>
+                <ion-input formControlName="username" type="text"></ion-input>
+            </ion-item>
+            <button ion-button color="primary" (click)="search(project.get('username').value)">Buscar</button>
+            <ion-item>
+              <span>
+                Miembros del Proyecto
+              </span>
+              <div>
+                <div style="display:inline-block; margin-left: 10px" *ngFor="let member of project.get('miembros').value; let i=index;">
+                    <ion-chip  ion-button  color="secondary" (click)="EliminarMiembro(i)" >{{member.username}}</ion-chip>
+                </div>
+              </div>  
+            </ion-item>
+
+            <ion-list>
+              <div *ngFor="let member of memberList">
+                  <button *ngIf="!MiembroExiste(member)"  ion-button block color="secondary" (click)="AgregarMiembro(member)" >{{member.username}}</button>
+               
+              </div>
+            </ion-list>
+            
+            <button ion-button block color="primary" (click)="goToSlide()">Continuar</button>
+            <button ion-button color="danger" (click)="goBack()">Atrás</button>
+          </ion-slide>
+
+          <ion-slide>
+              <ion-item>
+                <button ion-button (click)="ventanaObjetivo(null)">Agregar Objetivo</button>
+              </ion-item>
+
+              <ion-item>
+                <div *ngFor="let objetivo of project.get('objectives').value">
+                    <button ion-button (click)=ventanaObjetivo(objetivo) color="primary">{{objetivo.name}}</button>
+                </div>
+              </ion-item>
+            
+          </ion-slide>
+          
+          <ion-slide>
+            <ion-item>
+                <ion-label floating>Monto Presupuestado</ion-label>
+                <ion-input formControlName="presupuesto" type="number"></ion-input>
+              </ion-item>
+              <ion-item>
+                  <ion-label floating>Notas Sobre Financiamiento</ion-label>
+                  <ion-textarea formControlName="notas" type="text"></ion-textarea>
+                </ion-item>
+          <button ion-button [disabled]="project.invalid" color="secondary">Registrar Proyecto</button>
+          <button ion-button color="danger" (click)="goBack()">Atrás</button>
+        </ion-slide>
+        </ion-slides>
+
+  </ion-content>
+
+  <!--
+  <ion-content>
+    <div [ngSwitch]="Pasos">
+      <ion-list *ngSwitchCase="'paso1'">
+        <ion-item>
+            <ion-label floating>Nombre del proyecto</ion-label>
+            <ion-input clearOnEdit="true" type="text"></ion-input>
+        </ion-item>
+      </ion-list>
+      <ion-list *ngSwitchCase="'paso2'">
+          <ion-item>
+              <ion-label floating>Descripción del Proyecto</ion-label>
+              <ion-input type="text"></ion-input>
+          </ion-item>
+        </ion-list>
+
+    </div>
+  -->
+   <!--<ion-list [formGroup]="project">
   
   
       <ion-item>
@@ -84,7 +198,6 @@
   
     </ion-list>
   
-  
-  
-  </ion-content>
+  -->
+
   
