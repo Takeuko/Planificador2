@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Slides, Chip, ModalController, Modal } from 'ionic-angular';
+import { IonicPage, NavController,AlertController, NavParams, Slides, Chip, ModalController, Modal } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators, FormArray} from '@angular/forms';
 import { Http, Headers } from '@angular/http';
 import { Project, Objective} from '../models';
@@ -8,6 +8,7 @@ import { SearchPage } from '../search/search';
 import 'rxjs/add/operator/toPromise';
 import { Observable }        from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
+import {Storage} from '@ionic/storage';
 
 
 // Observable class extensions
@@ -44,18 +45,25 @@ export class ProjectRegisterPage
   nuevoObjetivo:Objective;
   private searchTerms = new Subject<string>();
   slideActual:number;
+  leader:number;
+  leaderInfo:any;
+  private headers = new Headers({'Content-Type': 'application/json; charset=utf-8;'});
 
   @ViewChild(Slides) Slides;
+  registroProject:string ='http://localhost/planificador-backend/public/registrarproyecto';
   Project:Project;
   project:FormGroup;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public FB : FormBuilder, private http:Http, private modal:ModalController) 
+  objetivoModificado:boolean;
+  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public navParams: NavParams, public storage:Storage, public FB : FormBuilder, private http:Http, private modal:ModalController) 
   {
+    this.storage.get('member').then(val=>this.leader=val['id']);   
+    this.storage.get('member').then(val=>this.AgregarMiembro(val));   
     this.Chips=[];
     this.nuevoObjetivo=new Objective();
     this.Project=new Project();
     this.Project.members=[];
     this.Project.objectives=[];
-    this.project=this.createMyForm();
+    this.project=this.createMyForm(this.leader);
     this.setMembers(this.Project.members);
     this.setObjectives(this.Project.objectives);
     
@@ -66,9 +74,9 @@ export class ProjectRegisterPage
     this.searchTerms.next(term);
   }
   
-  ventanaObjetivo(objetivoParametro:Objective)
+  ventanaObjetivo(objetivoParametro:Objective, index:number)
   {
-    const paginaObjetivo: Modal = this.modal.create('ObjetivoPage', {miembros: this.project.get('miembros').value, objetivo:objetivoParametro});
+    const paginaObjetivo: Modal = this.modal.create('ObjetivoPage', {miembros: this.project.get('miembros').value, objetivo:objetivoParametro, index:index});
     paginaObjetivo.present();
 
 
@@ -81,9 +89,17 @@ export class ProjectRegisterPage
         objective.name=data.nombre;
         objective.manager=data.encargado;
         objective.tasks=data.tareas;
-        
-        this.objectives.push(this.createObjective(objective));
-        console.log(this.project.value);
+        if(this.objectives.at(data.index)!==undefined)
+        {
+         
+          this.objectives.at(data.index).setValue(objective);
+
+        }
+        else
+        {
+          this.objectives.push(this.createObjective(objective));
+        }
+
       }
 
 
@@ -94,6 +110,7 @@ export class ProjectRegisterPage
   {
     this.Slides.lockSwipeToNext(true);
     this.Slides.lockSwipeToPrev(true);
+    
   }
 
   goToSlide()
@@ -139,7 +156,7 @@ export class ProjectRegisterPage
   }
 
 
-  private createMyForm()
+  private createMyForm(leader:number)
   {
 	  return this.FB.group
 	  ({
@@ -152,7 +169,9 @@ export class ProjectRegisterPage
       presupuesto: [null,Validators.required],
       username:[''],
       miembros:this.FB.array([]),
-      objectives:this.FB.array([])/*,
+      objectives:this.FB.array([]),
+      leader:[]
+      /*,
       prev_inv: ['', Validators.email],
      
       members:this.FB.array([]),
@@ -209,7 +228,9 @@ export class ProjectRegisterPage
 
   EliminarMiembro(i:number)
   {
+    if(i!=0)
     this.members.removeAt(i);
+
   }
 
   AgregarMiembro(member: any)
@@ -242,6 +263,64 @@ export class ProjectRegisterPage
   deleteObjective(index:number)
   {
     this.objectives.removeAt(index);
+  }
+
+  RegistrarProyecto()
+  {
+    console.log(JSON.stringify(this.project.value));
+    this.project.get('leader').setValue(this.leader);
+    
+    return this.http.post(this.registroProject, JSON.stringify(this.project.value), {headers: this.headers})
+    .toPromise()
+    .then(respuesta => 
+      {
+        this.Handle(respuesta.status);
+       
+        console.log(respuesta);
+      }
+      ).catch(this.handleError);
+
+  }
+
+  
+
+  Handle(res:number)
+  {
+	if(res===201)
+	{
+		let alert = this.alertCtrl.create
+		({
+			title: 'Registro Exitoso',
+			subTitle: 'Proyecto creado con exito',
+			buttons: [{
+				text:'Ok',
+				handler: ()=>{ this.IraInicio();}
+			}]
+		});
+		alert.present();
+	}
+	else if(res===209)
+	{
+		let alert = this.alertCtrl.create
+		({
+			title: 'Error',
+			subTitle: 'El nombre de usuario, correo o teléfono que has ingresado, ya están ocupados, por favor ingresa los datos nuevamente.',
+			buttons: ['Ok']
+		});
+		alert.present();
+	}
+  }
+
+  private handleError(error: any): Promise<any> 
+  {
+	console.error('An error occurred', error._body); // for demo purposes only
+	return Promise.reject(error.message || error);
+  }
+
+
+  IraInicio()
+  {
+    this.navCtrl.popToRoot();
   }
 
 }

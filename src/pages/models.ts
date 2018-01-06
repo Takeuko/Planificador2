@@ -27,4 +27,5 @@ export class Task
 {
     name:string;
     manager:Member;
+    
 }

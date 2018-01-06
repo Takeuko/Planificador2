@@ -73,7 +73,7 @@
             </ion-list>
             
             <button ion-button block color="primary" (click)="goToSlide()">Continuar</button>
-            <button ion-button color="danger" (click)="goBack()">Atrás</button>
+            <button ion-button block color="danger" (click)="goBack()">Atrás</button>
           </ion-slide>
 
           <ion-slide>
@@ -81,11 +81,14 @@
                 <button ion-button (click)="ventanaObjetivo(null)">Agregar Objetivo</button>
               </ion-item>
 
-              <ion-item>
-                <div *ngFor="let objetivo of project.get('objectives').value">
-                    <button ion-button (click)=ventanaObjetivo(objetivo) color="primary">{{objetivo.name}}</button>
+              
+                <div *ngFor="let objetivo of project.get('objectives').value; let i=index;">
+                    <button ion-button (click)="ventanaObjetivo(objetivo, i)" color="primary">{{objetivo.name}} {{i}}</button>
                 </div>
-              </ion-item>
+              
+
+              <button ion-button block color="primary" (click)="goToSlide()">Continuar</button>
+              <button ion-button block color="danger" (click)="goBack()">Atrás</button>
             
           </ion-slide>
           
@@ -98,7 +101,7 @@
                   <ion-label floating>Notas Sobre Financiamiento</ion-label>
                   <ion-textarea formControlName="notas" type="text"></ion-textarea>
                 </ion-item>
-          <button ion-button [disabled]="project.invalid" color="secondary">Registrar Proyecto</button>
+          <button ion-button [disabled]="project.invalid" color="secondary" (click)="RegistrarProyecto()">Registrar Proyecto</button>
           <button ion-button color="danger" (click)="goBack()">Atrás</button>
         </ion-slide>
         </ion-slides>

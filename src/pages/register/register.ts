@@ -73,73 +73,7 @@ public ValidarPass()
 		else return false;
 	}
 
-  Registrar()
-  {
 
-
-   	/*if(!this.Registro.valid)
-   	{
-   		let alert = this.alertCtrl.create
-				({
-      				title: 'Campo invalido',
-      				subTitle: 'Se encontraron uno o varios campos invalidos',
-      				buttons: ['OK']
-    			});
-
-    			alert.present();
-   		return;
-   	}
-  	
-  	if(!this.ValidarPass())
-  	{
-  		let alert = this.alertCtrl.create
-				({
-      				title: 'Contraseña',
-      				subTitle: 'Las contraseñas no coinciden',
-      				buttons: ['OK']
-    			});
-
-    			alert.present();
-    	return;
-  	}  
-*/
-	/*this.http.post('http://localhost/planificador/registro.php', JSON.stringify(this.member)).subscribe
-	(data =>
-
-		{
-			console.log(this.member.name);
-			/*
-			this.data.response = data["_body"];
-			if(data["_body"] == '200')
-			{
-				let alert = this.alertCtrl.create
-				({
-      				title: 'Usario o Email existe',
-      				subTitle: 'El nombre de usuario o email que ingresaste ya existe, por favor intenta de nuevo',
-      				buttons: ['OK']
-    			});
-
-    			alert.present();
-			}
-			else if(data["_body"] == '100')
-			{
-				let alert = this.alertCtrl.create
-				({
-      				title: 'Registro Exitoso',
-      				subTitle: 'Has sido registrado correctamente, ahora puedes disfrutar de nuestros servicios',
-      				buttons: ['OK']
-    			});
-    			alert.present();
-			}
-
-		},
-		error => 
-		{
-			console.log("Ooops!");
-		}
-
-	);*/
-  }
 
   private handleError(error: any): Promise<any> 
   {

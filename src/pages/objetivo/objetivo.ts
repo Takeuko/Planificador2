@@ -26,6 +26,7 @@ export class ObjetivoPage
   TareasArray:Task[];
   Objetivo:Objective;
   objetivo:FormGroup;
+  index:number;
   objetivoParametro:Objective;
   constructor(public navCtrl: NavController, public navParams: NavParams, private fb:FormBuilder, private view:ViewController) 
   {
@@ -49,7 +50,8 @@ export class ObjetivoPage
       this.objetivo=this.fb.group({
         nombre:[objetivo.name, Validators.required],
         encargado:[objetivo.manager, Validators.required],
-        tareas:[objetivo.tasks]
+        tareas:[objetivo.tasks],
+        index:[this.index]
       });
       
       //console.log(this.tareas.controls);
@@ -81,6 +83,7 @@ export class ObjetivoPage
   agregarTarea()
   {
     this.tareas.push(this.crearTarea());
+
   }
 
   crearTarea():  FormGroup 
@@ -109,6 +112,7 @@ export class ObjetivoPage
     this.objetivoParametro=this.navParams.get('objetivo');
     this.Objetivo=new Objective();
     this.Objetivo.tasks=[];
+    this.index=this.navParams.get('index');
     this.CrearFormulario(this.objetivoParametro);
     this.setTareas(this.objetivo.get('tareas').value);
     console.log(this.objetivo.value);
