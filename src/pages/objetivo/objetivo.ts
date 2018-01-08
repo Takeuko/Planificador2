@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormArray, FormGroup, Validators} from '@angular/forms';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, AlertController } from 'ionic-angular';
 import { Member } from '../register/member';
 import { Objective, Task } from '../models';
 
@@ -28,7 +28,7 @@ export class ObjetivoPage
   objetivo:FormGroup;
   index:number;
   objetivoParametro:Objective;
-  constructor(public navCtrl: NavController, public navParams: NavParams, private fb:FormBuilder, private view:ViewController) 
+  constructor(private alertCtrl:AlertController, public navCtrl: NavController, public navParams: NavParams, private fb:FormBuilder, private view:ViewController) 
   {
 
   }
@@ -40,7 +40,6 @@ export class ObjetivoPage
     {
       this.objetivo=this.fb.group({
         nombre:['', Validators.required],
-        encargado:[null, Validators.required],
         tareas:this.fb.array([])
       });
       
@@ -49,7 +48,6 @@ export class ObjetivoPage
     {
       this.objetivo=this.fb.group({
         nombre:[objetivo.name, Validators.required],
-        encargado:[objetivo.manager, Validators.required],
         tareas:[objetivo.tasks],
         index:[this.index]
       });
@@ -72,7 +70,42 @@ export class ObjetivoPage
 
   atras()
   {
-    this.view.dismiss();
+    if(this.objetivo.invalid)
+    {
+      let alert = this.alertCtrl.create
+      ({
+        title: 'Cambios',
+        subTitle: 'Aún no has guardado los cambios, ¿seguro que quieres volver?',
+        buttons: [{
+          text:'Si',
+          handler: ()=>{this.view.dismiss();}
+        },
+      {
+        text:'No'
+      }]
+      });
+      alert.present();
+    }
+
+    else 
+    {
+      let alert = this.alertCtrl.create
+      ({
+        title: 'Cambios',
+        subTitle: '¿Deseas guardar los cambios?',
+        buttons: [{
+          text:'Si',
+          handler: ()=>{this.listo();}
+        },
+      {
+        text:'No',
+        handler:()=>{this.view.dismiss();}
+      }]
+      });
+      alert.present();
+    }
+
+    
   }
 
   eliminarTarea(i:number)
@@ -105,6 +138,8 @@ export class ObjetivoPage
   {
     console.log(this.objetivo.get('encargado').value);
   }
+
+
 
   ionViewWillLoad() 
   {

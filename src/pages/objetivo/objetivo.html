@@ -25,12 +25,6 @@
   <ion-input [value]="objetivo.get('nombre').value" formControlName="nombre" type="text"></ion-input>
 </ion-item>
 
-    <ion-item>
-      <ion-label>Encargado del Objetivo</ion-label>
-      <ion-select interface="popover" formControlName="encargado">
-        <ion-option [value]="miembro.id" *ngFor="let miembro of miembros">{{miembro.username}}</ion-option>
-      </ion-select>
-    </ion-item>
   
   <div formArrayName="tareas">
     <div *ngFor="let tarea of tareas.controls; let i = index" [formGroupName]="i">
@@ -53,6 +47,6 @@
   </div>
   <button ion-button (click)="agregarTarea()">Agregar Tarea</button>
  
- <!--Boton de listo--> <button ion-button [disabled]="objetivo.invalid || objetivo.get('tareas').invalid" color="secondary" (click)="listo()">Listo</button>
+ <!--Boton de listo--> <button ion-button [disabled]="objetivo.invalid || objetivo.get('tareas').invalid" color="secondary" (click)="listo()">Guardar</button>
 </ion-list>
 </ion-content>

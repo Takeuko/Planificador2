@@ -26,10 +26,7 @@ export class Home2Page
   }
 
 
-  ionViewDidLoad() 
-  {
-    this.storage.get('member').then(val=>this.nom=val['name']);
-  }
+
 
   LogOut()
   {
@@ -38,11 +35,7 @@ export class Home2Page
   }
 
 
-  joinChat() {
-    this.socket.connect();
-    this.socket.emit('set-nickname', this.nickname);
-    this.navCtrl.push('ChatRoomPage', { nickname: this.nickname });
-  }
+ 
 
   goToProjectForm()
   {

@@ -53,7 +53,12 @@
                 <ion-label floating>Nombre de Usuario</ion-label>
                 <ion-input formControlName="username" type="text"></ion-input>
             </ion-item>
+            
             <button ion-button color="primary" (click)="search(project.get('username').value)">Buscar</button>
+            <div>
+              
+            </div>
+            
             <ion-item>
               <span>
                 Miembros del Proyecto
@@ -66,6 +71,7 @@
             </ion-item>
 
             <ion-list>
+                <ion-spinner *ngIf="mostrarSpinner"></ion-spinner>
               <div *ngFor="let member of memberList">
                   <button *ngIf="!MiembroExiste(member)"  ion-button block color="secondary" (click)="AgregarMiembro(member)" >{{member.username}}</button>
                
@@ -83,7 +89,7 @@
 
               
                 <div *ngFor="let objetivo of project.get('objectives').value; let i=index;">
-                    <button ion-button (click)="ventanaObjetivo(objetivo, i)" color="primary">{{objetivo.name}} {{i}}</button>
+                    <button ion-button (click)="ventanaObjetivo(objetivo, i)" color="primary">{{objetivo.name}}</button>
                 </div>
               
 

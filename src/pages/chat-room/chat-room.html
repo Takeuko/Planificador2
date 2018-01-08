@@ -3,6 +3,20 @@
     <ion-title>
       Chat
     </ion-title>
+    <ion-buttons end>
+
+        <button ion-button>
+            <ion-icon name="person"></ion-icon>
+          </button>
+
+        <button ion-button>
+            <ion-icon name="checkmark"></ion-icon>
+          </button>
+
+            <button ion-button>
+                <ion-icon name="menu"></ion-icon>
+              </button>
+      </ion-buttons>
   </ion-navbar>
 </ion-header>
  
@@ -35,11 +49,38 @@
           <ion-input type="text" placeholder="Message" [(ngModel)]="message"></ion-input>
         </ion-item>
       </ion-col>
-      <ion-col col-3>
-        <button ion-button clear color="primary" (click)="sendMessage()" [disabled]="message === ''">
-        Send
-      </button>
+        <ion-col col-3>
+          <button ion-button clear color="secondary" (click)="sendMessage()" [disabled]="message === ''">
+          Send
+        </button>
       </ion-col>
     </ion-row>
+
+  <ion-grid>
+    <ion-row>
+        <ion-col col-2.35>
+          <button ion-button clear><ion-icon name="logo-reddit"></ion-icon></button>
+        </ion-col>
+        <ion-col col-2.35>
+          <button ion-button clear><ion-icon name="logo-youtube"></ion-icon></button>
+        </ion-col>
+        <ion-col col-2.35>
+          <button ion-button clear><ion-icon name="image"></ion-icon></button>
+        </ion-col>
+        <ion-col col-2.35>
+            <button ion-button clear><ion-icon name="document"></ion-icon></button>
+        </ion-col>
+        <ion-col col-2.35>
+            <button ion-button clear><ion-icon name="volume-up"></ion-icon></button>
+        </ion-col>
+    </ion-row>  
+  </ion-grid>
+
+    
   </ion-toolbar>
 </ion-footer>
+      
+
+
+
+

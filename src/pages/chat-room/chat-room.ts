@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, IonicPage, NavParams, ToastController } from 'ionic-angular';
 import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs/Observable';
+import {Storage} from '@ionic/storage';
  
 @IonicPage()
 @Component({
@@ -12,22 +13,17 @@ export class ChatRoomPage {
   messages = [];
   nickname = '';
   message = '';
- 
-  constructor(private navCtrl: NavController, private navParams: NavParams, private socket: Socket, private toastCtrl: ToastController) {
+ projectId:number;
+
+  constructor(private storage:Storage, private navCtrl: NavController, private navParams: NavParams, private socket: Socket, private toastCtrl: ToastController) 
+  {
     this.nickname = this.navParams.get('nickname');
  
     this.getMessages().subscribe(message => {
       this.messages.push(message);
     });
  
-    this.getUsers().subscribe(data => {
-      let user = data['user'];
-      if (data['event'] === 'left') {
-        this.showToast('User left: ' + user);
-      } else {
-        this.showToast('User joined: ' + user);
-      }
-    });
+   
   }
  
   sendMessage() {
@@ -54,9 +50,22 @@ export class ChatRoomPage {
   }
  
   ionViewWillLeave() {
-    //this.socket.disconnect();
+    this.socket.disconnect();
   }
  
+  joinChat() 
+  {
+    this.socket.connect();
+    this.socket.emit('set-nickname', {projectName:this.projectId, nickName:this.nickname});
+    console.log(this.projectId);
+  }
+
+  ionViewDidLoad() 
+  {
+    this.projectId=this.navParams.get('data');
+    this.nickname=this.navParams.get('nickName');
+    this.joinChat();
+  }
   showToast(msg) {
     let toast = this.toastCtrl.create({
       message: msg,

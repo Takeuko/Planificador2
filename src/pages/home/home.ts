@@ -19,7 +19,7 @@ export class HomePage
   data:any={};
 	@ViewChild('username') username;
   @ViewChild('password') password;
-  loginUrl:string='http://192.168.250.30/planificador-backend/public/member/login';
+  loginUrl:string='http://localhost/planificador-backend/public/member/login';
   private headers = new Headers({'Content-Type': 'application/json; charset=utf-8;'});
   
 

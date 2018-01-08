@@ -5,15 +5,13 @@ let io = require('socket.io')(http);
 io.on('connection', (socket) => 
 {
 
-  socket.on('disconnect', function(){
-    io.emit('users-changed', {user: socket.nickname, event: 'left'});   
-  });
  
-  socket.on('set-nickname', (nickname) => {
-    socket.nickname = nickname;
-    socket.room = nickname;
-    socket.join(nickname);
-    io.emit('users-changed', {user: nickname, event: 'joined'});    
+ 
+  socket.on('set-nickname', (data) => {
+    socket.nickname = data['nickName'];
+    socket.room = data['projectName'];
+    socket.join(data['projectName']);
+  
   });
   
   socket.on('add-message', (message) => {

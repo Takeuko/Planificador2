@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { Http } from '@angular/http';
 import {Storage} from '@ionic/storage';
+import { ChatRoomPage } from '../chat-room/chat-room';
 /**
  * Generated class for the ProyectosPage page.
  *
@@ -31,11 +32,20 @@ export class ProyectosPage
     );
   }
 
+  goToChatRoom(projectId:number)
+  {
+    this.navCtrl.push(ChatRoomPage, {data:projectId, nickName:this.miembro['username']});
+  }
+
   consultarProyectos(id:number)
   {
     this.http.get(this.proyectosUrl+id)
     .toPromise()
-    .then(respuesta=>this.proyectos=respuesta.json());
+    .then(respuesta=>
+      {this.proyectos=respuesta.json();
+        console.log(this.proyectos);});
+
+    
   }
   
 

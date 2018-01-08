@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators, FormArray} from '@angular/forms';
 import { Http, Headers } from '@angular/http';
 import { Project, Objective} from '../models';
 import { Member } from '../register/member';
-import { SearchPage } from '../search/search';
 import 'rxjs/add/operator/toPromise';
 import { Observable }        from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
@@ -54,8 +53,11 @@ export class ProjectRegisterPage
   Project:Project;
   project:FormGroup;
   objetivoModificado:boolean;
+  canLeave:boolean;
+  mostrarSpinner:boolean;
   constructor(public navCtrl: NavController, public alertCtrl: AlertController, public navParams: NavParams, public storage:Storage, public FB : FormBuilder, private http:Http, private modal:ModalController) 
   {
+    this.mostrarSpinner=false;
     this.storage.get('member').then(val=>this.leader=val['id']);   
     this.storage.get('member').then(val=>this.AgregarMiembro(val));   
     this.Chips=[];
@@ -67,6 +69,32 @@ export class ProjectRegisterPage
     this.setMembers(this.Project.members);
     this.setObjectives(this.Project.objectives);
     
+  }
+
+  ionViewCanLeave(): Promise<any> 
+  {
+    if(this.project.invalid)
+    {
+      return new Promise((resolve, reject) => {
+        let confirm = this.alertCtrl.create({
+          title: '¿Salir?',
+          subTitle: 'El proyecto no será guardado.',
+          buttons: [{
+            text: 'Sí',
+            handler: () => {
+              resolve();
+            },
+          }, {
+            text: 'No',
+            handler: () => {
+              reject();
+            }
+          }],
+        });
+        confirm.present();
+      })
+    }
+   
   }
 
   buscar(term: string): void 
@@ -87,7 +115,6 @@ export class ProjectRegisterPage
 
         const objective:Objective=new Objective();
         objective.name=data.nombre;
-        objective.manager=data.encargado;
         objective.tasks=data.tareas;
         if(this.objectives.at(data.index)!==undefined)
         {
@@ -131,13 +158,31 @@ export class ProjectRegisterPage
   
   search(term: string) 
   {
-    this.http
-    .get(this.searchUrl+term)
-    .toPromise()
-    .then(response => 
+    if(term==='')
     {
-      this.memberList=response.json();
-    });
+      let alert = this.alertCtrl.create({
+        title:'Campo vacío',
+        subTitle:'No has introducido ningún valor, por favor intenta de nuevo.',
+        buttons:[{
+          text:'ok'
+        }]
+      });
+      alert.present();
+      
+    }
+    else
+    {
+      this.mostrarSpinner=true;
+      this.http
+      .get(this.searchUrl+term)
+      .toPromise()
+      .then(response => 
+      {
+        this.memberList=response.json();
+        this.mostrarSpinner=false;
+      });
+    }
+
 
   }
 
@@ -149,11 +194,6 @@ export class ProjectRegisterPage
     return this.project.get('miembros') as FormArray;
   };
 
-  goToSearch()
-  {
-  
-    this.navCtrl.push(SearchPage);
-  }
 
 
   private createMyForm(leader:number)
@@ -209,7 +249,6 @@ export class ProjectRegisterPage
   {
     return this.FB.group({
             name: [objective.name],
-            manager:[objective.manager],
             tasks:[objective.tasks]
     });
   }
