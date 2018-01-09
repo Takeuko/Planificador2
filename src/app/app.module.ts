@@ -16,7 +16,9 @@ import {ProyectosPage} from '../pages/proyectos/proyectos';
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 import { IonicStorageModule } from '@ionic/storage';
 import { ChatRoomPage } from '../pages/chat-room/chat-room';
-const config: SocketIoConfig = { url: 'http://localhost:3001', options: {} };
+import { UsersListPage} from '../pages/users-list/users-list';
+import { ObjectivesListPage} from '../pages/objectives-list/objectives-list';
+const config: SocketIoConfig = { url: 'http://192.168.250.18:3001', options: {} };
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ const config: SocketIoConfig = { url: 'http://localhost:3001', options: {} };
     ProyectosPage,
     ProjectRegisterPage,
     SearchPage,
-    ChatRoomPage
+    ChatRoomPage,
+    UsersListPage,
+    ObjectivesListPage
   ],
   imports: [
     BrowserModule,
@@ -47,7 +51,9 @@ const config: SocketIoConfig = { url: 'http://localhost:3001', options: {} };
     ProyectosPage,
     ProjectRegisterPage,
     SearchPage,
-    ChatRoomPage
+    ChatRoomPage,
+    UsersListPage,
+    ObjectivesListPage
 
   ],
   providers: [

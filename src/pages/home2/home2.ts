@@ -23,6 +23,7 @@ export class Home2Page
   nickname='';
   constructor(public navCtrl: NavController, public storage:Storage, private socket:Socket) 
   {
+    this.storage.get('member').then(val=>this.nom=val['name']);
   }
 
 

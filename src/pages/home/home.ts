@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
+import { NavController, AlertController, LoadingController } from 'ionic-angular';
 import { Http, Headers } from '@angular/http';
 import { RegisterPage } from '../register/register'
 import { Home2Page } from '../home2/home2';
@@ -19,12 +19,12 @@ export class HomePage
   data:any={};
 	@ViewChild('username') username;
   @ViewChild('password') password;
-  loginUrl:string='http://localhost/planificador-backend/public/member/login';
+  loginUrl:string='http://192.168.250.18/planificador-backend/public/member/login';
   private headers = new Headers({'Content-Type': 'application/json; charset=utf-8;'});
   
 
 
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public http: Http, private storage:Storage) 
+  constructor(public loadingCtrl:LoadingController,public navCtrl: NavController, public alertCtrl: AlertController, public http: Http, private storage:Storage) 
   {
     this.storage.get('member').then(
       member=>
@@ -57,10 +57,18 @@ export class HomePage
 
   LoginMember(member:any)
   {
+    let loader = this.loadingCtrl.create({
+      content: "Espera.."
+    });
+
     return this.http
     .post(this.loginUrl, JSON.stringify(member), {headers: this.headers})
     .toPromise()
-    .then(res => this.Handle(res))
+    .then(res => 
+      { 
+        this.Handle(res);
+        loader.dismiss();
+      })
     .catch(this.handleError);
   }
 

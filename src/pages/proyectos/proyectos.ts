@@ -20,7 +20,7 @@ export class ProyectosPage
 
   proyectos:any;
   miembro:any;
-  proyectosUrl:string='http://localhost/planificador-backend/public/proyectos/';
+  proyectosUrl:string='http://192.168.250.18/planificador-backend/public/proyectos/';
   constructor(private storage:Storage,public navCtrl: NavController, public navParams: NavParams, private http:Http,public alertCtrl: AlertController) 
   {
     this.storage.get('member').then(
@@ -42,8 +42,9 @@ export class ProyectosPage
     this.http.get(this.proyectosUrl+id)
     .toPromise()
     .then(respuesta=>
-      {this.proyectos=respuesta.json();
-        console.log(this.proyectos);});
+      {
+        this.proyectos=respuesta.json();
+      });
 
     
   }

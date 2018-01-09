@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
-import { NavController, IonicPage, NavParams, ToastController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { NavController, IonicPage, NavParams, ToastController, Content } from 'ionic-angular';
 import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs/Observable';
 import {Storage} from '@ionic/storage';
+import { UsersListPage} from '../users-list/users-list';
+import { ObjectivesListPage} from '../objectives-list/objectives-list';
  
 @IonicPage()
 @Component({
@@ -14,6 +16,8 @@ export class ChatRoomPage {
   nickname = '';
   message = '';
  projectId:number;
+ @ViewChild('content') content:Content;
+ @ViewChild('input') input;
 
   constructor(private storage:Storage, private navCtrl: NavController, private navParams: NavParams, private socket: Socket, private toastCtrl: ToastController) 
   {
@@ -22,13 +26,41 @@ export class ChatRoomPage {
     this.getMessages().subscribe(message => {
       this.messages.push(message);
     });
- 
+
+    this.focus(this.input);
+
    
   }
+
+  verObjetivos()
+  {
+    this.navCtrl.push(ObjectivesListPage, {id:this.projectId});
+  }
+
+  verEncargados()
+  {
+    this.navCtrl.push(UsersListPage, {id:this.projectId});
+  }
+
+  focus(input)
+  {
+    setTimeout(()=>{
+      this.input.setFocus();
+      }, 0);
+  }
  
-  sendMessage() {
+  sendMessage(input) {
+   
     this.socket.emit('add-message', { text: this.message });
+    
+    
     this.message = '';
+    this.focus(input);
+  }
+
+  scrollDown()
+  {
+    this.content.scrollToBottom(250);
   }
  
   getMessages() {
@@ -36,7 +68,9 @@ export class ChatRoomPage {
       this.socket.on('message', (data) => {
         observer.next(data);
       });
-    })
+    });
+    
+    
     return observable;
   }
  
@@ -57,7 +91,6 @@ export class ChatRoomPage {
   {
     this.socket.connect();
     this.socket.emit('set-nickname', {projectName:this.projectId, nickName:this.nickname});
-    console.log(this.projectId);
   }
 
   ionViewDidLoad() 
