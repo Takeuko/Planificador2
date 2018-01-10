@@ -6,7 +6,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
-import { SearchPage } from '../pages/search/search';
 import {FirstPage} from '../pages/first/first';
 import { HttpModule } from '@angular/http';
 import { RegisterPage } from '../pages/register/register';
@@ -19,11 +18,24 @@ import { ChatRoomPage } from '../pages/chat-room/chat-room';
 import { UsersListPage} from '../pages/users-list/users-list';
 import { ObjectivesListPage} from '../pages/objectives-list/objectives-list';
 import { TaskListPage } from '../pages/task-list/task-list';
+import { ObjetivoPage} from '../pages/objetivo/objetivo';
 const config: SocketIoConfig = { url: 'http://192.168.250.18:3001', options: {} };
 
 @NgModule({
   declarations: [
-    MyApp
+    MyApp,
+    HomePage,
+    FirstPage,
+    RegisterPage,
+    Home2Page,
+    ProyectosPage,
+    ProjectRegisterPage,
+    ChatRoomPage,
+    UsersListPage,
+    ObjectivesListPage,
+    TaskListPage,
+    ObjetivoPage
+
   ],
   imports: [
     BrowserModule,
@@ -41,11 +53,11 @@ const config: SocketIoConfig = { url: 'http://192.168.250.18:3001', options: {} 
     Home2Page,
     ProyectosPage,
     ProjectRegisterPage,
-    SearchPage,
     ChatRoomPage,
     UsersListPage,
     ObjectivesListPage,
-    TaskListPage
+    TaskListPage,
+    ObjetivoPage
 
   ],
   providers: [

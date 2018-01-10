@@ -20,7 +20,7 @@ export class ObjectivesListPage
 
   objetivos:any;
   projectId:number;
-  objetivosUrl:string='http://localhost/planificador-backend/public/proyectos/objetivos/';
+  objetivosUrl:string='http://192.168.250.18/planificador-backend/public/proyectos/objetivos/';
   name:string;
 
   constructor(private http:Http, public navCtrl: NavController, public navParams: NavParams) 

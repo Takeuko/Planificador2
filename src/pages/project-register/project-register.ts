@@ -28,7 +28,6 @@ import { removeArrayItem } from 'ionic-angular/util/util';
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
  */
-
 @IonicPage()
 @Component({
   selector: 'page-project-register',
@@ -38,7 +37,7 @@ export class ProjectRegisterPage
 {
   Chips: Member[];
 
-  searchUrl:string='http://localhost/planificador-backend/public/members/';
+  searchUrl:string='http://192.168.250.18/planificador-backend/public/members/';
   memberList: any;
   miembrosAñadidos: any;
   nuevoObjetivo:Objective;
@@ -49,7 +48,7 @@ export class ProjectRegisterPage
   private headers = new Headers({'Content-Type': 'application/json; charset=utf-8;'});
 
   @ViewChild(Slides) Slides;
-  registroProject:string ='http://localhost/planificador-backend/public/registrarproyecto';
+  registroProject:string ='http://192.168.250.18/planificador-backend/public/registrarproyecto';
   Project:Project;
   project:FormGroup;
   objetivoModificado:boolean;
@@ -91,6 +90,8 @@ export class ProjectRegisterPage
             }
           }],
         });
+
+        reject();
         confirm.present();
       })
     }

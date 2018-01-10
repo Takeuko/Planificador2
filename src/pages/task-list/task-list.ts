@@ -18,7 +18,7 @@ import { Http } from '@angular/http';
 export class TaskListPage {
 
   tareas:any;
-  tareasUrl:string='http://localhost/planificador-backend/public/proyectos/objetivos/tareas/';
+  tareasUrl:string='http://192.168.250.18/planificador-backend/public/proyectos/objetivos/tareas/';
   objetivo:any;
 
   constructor(private http:Http, public navCtrl: NavController, public navParams: NavParams) 
@@ -34,7 +34,6 @@ export class TaskListPage {
       respuesta=>
       {
         this.tareas=respuesta.json();
-        console.log(this.tareas);
       }
     );
   }

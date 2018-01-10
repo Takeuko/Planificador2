@@ -15,7 +15,7 @@ import { Http } from '@angular/http';
 })
 export class UsersListPage 
 {
-  encargadosUrl:string='http://localhost/planificador-backend/public/proyectos/miembros/';
+  encargadosUrl:string='http://192.168.250.18/planificador-backend/public/proyectos/miembros/';
   encargados:any;
   projectId:number;
   name:string;
