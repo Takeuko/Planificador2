@@ -30,8 +30,10 @@ export class ObjetivoPage
   objetivoParametro:Objective;
   constructor(private alertCtrl:AlertController, public navCtrl: NavController, public navParams: NavParams, private fb:FormBuilder, private view:ViewController) 
   {
+    console.log('hola');
 
   }
+
 
 
   CrearFormulario(objetivo:Objective)

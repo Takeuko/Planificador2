@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>objectives-list</ion-title>
+    <ion-title>Objetivos de {{name}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -15,11 +15,10 @@
 
 <ion-content padding>
 
-
     <ion-list>
-        <button ion-item *ngFor="let objetivo of objetivos">
+        <button ion-item *ngFor="let objetivo of objetivos" (click)="verTareas(objetivo)">
           {{ objetivo.objective }}
         </button>  
-      </ion-list>
+    </ion-list>
 
 </ion-content>

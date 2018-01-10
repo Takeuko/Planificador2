@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Http } from '@angular/http';
+import { TaskListPage} from '../task-list/task-list';
 
 /**
  * Generated class for the ObjectivesListPage page.
@@ -20,9 +21,11 @@ export class ObjectivesListPage
   objetivos:any;
   projectId:number;
   objetivosUrl:string='http://localhost/planificador-backend/public/proyectos/objetivos/';
+  name:string;
 
   constructor(private http:Http, public navCtrl: NavController, public navParams: NavParams) 
   {
+    this.name=this.navParams.get('data')['name'];
   }
 
   ionViewWillLoad()
@@ -40,6 +43,11 @@ export class ObjectivesListPage
         this.objetivos=respuesta.json();
       }
     );
+  }
+
+  verTareas(objetivo)
+  {
+    this.navCtrl.push(TaskListPage, {data:objetivo});
   }
 
 

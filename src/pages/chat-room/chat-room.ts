@@ -16,13 +16,15 @@ export class ChatRoomPage {
   nickname = '';
   message = '';
  projectId:number;
+ name:string;
  @ViewChild('content') content:Content;
  @ViewChild('input') input;
 
   constructor(private storage:Storage, private navCtrl: NavController, private navParams: NavParams, private socket: Socket, private toastCtrl: ToastController) 
   {
     this.nickname = this.navParams.get('nickname');
- 
+    this.name=this.navParams.get('data')['name'];
+    this.name=this.name.toUpperCase();
     this.getMessages().subscribe(message => {
       this.messages.push(message);
     });
@@ -34,12 +36,12 @@ export class ChatRoomPage {
 
   verObjetivos()
   {
-    this.navCtrl.push(ObjectivesListPage, {id:this.projectId});
+    this.navCtrl.push(ObjectivesListPage, {id:this.projectId, data:this.navParams.get('data')});
   }
 
   verEncargados()
   {
-    this.navCtrl.push(UsersListPage, {id:this.projectId});
+    this.navCtrl.push(UsersListPage, {id:this.projectId, data:this.navParams.get('data')});
   }
 
   focus(input)
@@ -95,7 +97,7 @@ export class ChatRoomPage {
 
   ionViewDidLoad() 
   {
-    this.projectId=this.navParams.get('data');
+    this.projectId=this.navParams.get('data')['id_proyecto'];
     this.nickname=this.navParams.get('nickName');
     this.joinChat();
   }

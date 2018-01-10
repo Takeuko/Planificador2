@@ -18,21 +18,12 @@ import { IonicStorageModule } from '@ionic/storage';
 import { ChatRoomPage } from '../pages/chat-room/chat-room';
 import { UsersListPage} from '../pages/users-list/users-list';
 import { ObjectivesListPage} from '../pages/objectives-list/objectives-list';
+import { TaskListPage } from '../pages/task-list/task-list';
 const config: SocketIoConfig = { url: 'http://192.168.250.18:3001', options: {} };
 
 @NgModule({
   declarations: [
-    MyApp,
-    HomePage,
-    FirstPage,
-    RegisterPage,
-    Home2Page,
-    ProyectosPage,
-    ProjectRegisterPage,
-    SearchPage,
-    ChatRoomPage,
-    UsersListPage,
-    ObjectivesListPage
+    MyApp
   ],
   imports: [
     BrowserModule,
@@ -53,7 +44,8 @@ const config: SocketIoConfig = { url: 'http://192.168.250.18:3001', options: {} 
     SearchPage,
     ChatRoomPage,
     UsersListPage,
-    ObjectivesListPage
+    ObjectivesListPage,
+    TaskListPage
 
   ],
   providers: [

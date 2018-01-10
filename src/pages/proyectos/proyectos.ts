@@ -32,7 +32,7 @@ export class ProyectosPage
     );
   }
 
-  goToChatRoom(projectId:number)
+  goToChatRoom(projectId)
   {
     this.navCtrl.push(ChatRoomPage, {data:projectId, nickName:this.miembro['username']});
   }

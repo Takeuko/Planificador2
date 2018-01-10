@@ -18,10 +18,11 @@ export class UsersListPage
   encargadosUrl:string='http://localhost/planificador-backend/public/proyectos/miembros/';
   encargados:any;
   projectId:number;
+  name:string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public http:Http) 
   {
-    
+    this.name=this.navParams.get('data')['name'];
   }
 
   ionViewDidLoad() 
