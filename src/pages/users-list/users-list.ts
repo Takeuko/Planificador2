@@ -1,3 +1,4 @@
+import { DireccionServer } from './../global';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Http } from '@angular/http';
@@ -8,19 +9,19 @@ import { Http } from '@angular/http';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-users-list',
   templateUrl: 'users-list.html',
 })
 export class UsersListPage 
 {
-  encargadosUrl:string='http://192.168.250.18/planificador-backend/public/proyectos/miembros/';
+  encargadosUrl:string=this.Url.Url+'proyectos/miembros/';
   encargados:any;
   projectId:number;
   name:string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public http:Http) 
+  constructor(public Url:DireccionServer, public navCtrl: NavController, public navParams: NavParams, public http:Http) 
   {
     this.name=this.navParams.get('data')['name'];
   }

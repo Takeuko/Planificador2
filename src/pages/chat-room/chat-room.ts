@@ -1,29 +1,59 @@
+import { DireccionServer } from './../global';
+import { ProjectPage } from './../project/project';
 import { Component, ViewChild } from '@angular/core';
-import { NavController, IonicPage, NavParams, ToastController, Content } from 'ionic-angular';
+import { PopoverController ,NavController, IonicPage, NavParams, ToastController, Content } from 'ionic-angular';
 import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs/Observable';
 import {Storage} from '@ionic/storage';
 import { UsersListPage} from '../users-list/users-list';
 import { ObjectivesListPage} from '../objectives-list/objectives-list';
+import { SubMenuPage } from '../sub-menu/sub-menu';
+import { Http, Headers } from '@angular/http';
  
-@IonicPage()
+
 @Component({
   selector: 'page-chat-room',
   templateUrl: 'chat-room.html',
 })
 export class ChatRoomPage {
-  messages = [];
+  public messages = [];
   nickname = '';
   message = '';
  projectId:number;
  name:string;
+ leader:boolean;
+ leaderId:number;
+ member:any;
+ private headers = new Headers({'Content-Type': 'application/json; charset=utf-8;'});
+
  @ViewChild('content') content:Content;
  @ViewChild('input') input;
 
-  constructor(private storage:Storage, private navCtrl: NavController, private navParams: NavParams, private socket: Socket, private toastCtrl: ToastController) 
+  constructor(public server:DireccionServer, public http:Http, private popCtrl:PopoverController, private storage:Storage, private navCtrl: NavController, private navParams: NavParams, private socket: Socket, private toastCtrl: ToastController) 
   {
+    this.leader=false;
     this.nickname = this.navParams.get('nickname');
     this.name=this.navParams.get('data')['name'];
+    this.leaderId=this.navParams.get('data')['leader'];
+    this.storage.get('member').then(
+      res=>
+      {
+        this.member=res;
+
+        if(this.leaderId===this.member['id'])
+        {
+          this.leader=true;
+          this.storage.set('leader', true);
+        }
+        else
+        {
+          this.leader=false;
+          this.storage.set('leader', false);
+        }
+
+      }
+
+    );
     this.name=this.name.toUpperCase();
     this.getMessages().subscribe(message => {
       this.messages.push(message);
@@ -33,6 +63,7 @@ export class ChatRoomPage {
 
    
   }
+
 
   verObjetivos()
   {
@@ -53,12 +84,23 @@ export class ChatRoomPage {
  
   sendMessage(input) {
    
-    this.socket.emit('add-message', { text: this.message });
     
     
-    this.message = '';
+    this.http.post(this.server.UrlLocal+'proyecto/chats', JSON.stringify({message:this.message, chat_id:this.projectId}),{headers: this.headers})
+    .toPromise()
+    .then(
+      res=>
+      {
+        this.socket.emit('add-message', { text: this.message });
+        this.message = '';
+        
+      }
+    );
     this.focus(input);
+
   }
+
+  guar
 
   scrollDown()
   {
@@ -108,4 +150,11 @@ export class ChatRoomPage {
     });
     toast.present();
   }
+
+  popover()
+  {
+    let subMenu=this.popCtrl.create(SubMenuPage,{id:this.projectId});
+    subMenu.present();
+  }
+  
 }

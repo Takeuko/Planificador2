@@ -1,3 +1,4 @@
+import { DireccionServer } from './../global';
 import { Component, ViewChild } from '@angular/core';
 import { NavController, AlertController, LoadingController } from 'ionic-angular';
 import { Http, Headers } from '@angular/http';
@@ -19,12 +20,12 @@ export class HomePage
   data:any={};
 	@ViewChild('username') username;
   @ViewChild('password') password;
-  loginUrl:string='http://192.168.250.18/planificador-backend/public/member/login';
+  loginUrl:string=this.Url.Url+'member/login';
   private headers = new Headers({'Content-Type': 'application/json; charset=utf-8;'});
   
 
 
-  constructor(public loadingCtrl:LoadingController,public navCtrl: NavController, public alertCtrl: AlertController, public http: Http, private storage:Storage) 
+  constructor(public Url:DireccionServer, public loadingCtrl:LoadingController,public navCtrl: NavController, public alertCtrl: AlertController, public http: Http, private storage:Storage) 
   {
     this.storage.get('member').then(
       member=>
@@ -60,7 +61,7 @@ export class HomePage
     let loader = this.loadingCtrl.create({
       content: "Espera.."
     });
-
+    loader.present();
     return this.http
     .post(this.loginUrl, JSON.stringify(member), {headers: this.headers})
     .toPromise()

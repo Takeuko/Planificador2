@@ -1,6 +1,8 @@
+import { DireccionServer } from './../global';
+import { Storage } from '@ionic/storage';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Http } from '@angular/http';
+import { Http,Headers } from '@angular/http';
 
 
 /**
@@ -10,20 +12,40 @@ import { Http } from '@angular/http';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-task-list',
   templateUrl: 'task-list.html',
 })
 export class TaskListPage {
-
+  private headers = new Headers({'Content-Type': 'application/json; charset=utf-8;'});
   tareas:any;
-  tareasUrl:string='http://192.168.250.18/planificador-backend/public/proyectos/objetivos/tareas/';
+  tareasUrl:string=this.Url.Url+'proyectos/objetivos/tareas/';
   objetivo:any;
+  miembro:any;
+  proyecto:any;
+  leader:boolean;
 
-  constructor(private http:Http, public navCtrl: NavController, public navParams: NavParams) 
+  constructor(public Url:DireccionServer, private storage:Storage, private http:Http, public navCtrl: NavController, public navParams: NavParams) 
   {
-    //this.objetivo={};
+    this.storage.get('member').then(
+      member=>
+      {
+        this.miembro=member;
+        this.proyecto=this.navParams.get('proyecto');
+        if(this.miembro['id']===this.proyecto['leader'])
+        {
+          this.leader=true;
+        }
+        else
+        {
+          this.leader=false;
+        }
+      });
+
+      
+
+
   }
 
   obtenerTareas(id_objetivo:number)
@@ -34,8 +56,27 @@ export class TaskListPage {
       respuesta=>
       {
         this.tareas=respuesta.json();
+        console.log(this.tareas);
       }
     );
+  }
+
+  verificar(i:number)
+  {
+    if(this.tareas[i].complete===1)
+    {
+      return true;
+    }
+
+    else return false;
+  }
+
+  completarTarea(tarea:any)
+  {
+    this.http.post(this.Url.Url+'proyectos/objetivos/tareas/completar',JSON.stringify(tarea), {headers: this.headers})
+    .toPromise()
+    .then(response=>{ this.tareas=response.json();});
+    
   }
 
   ionViewWillLoad()

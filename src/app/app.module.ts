@@ -1,3 +1,5 @@
+import { ProjectPage } from './../pages/project/project';
+import { DireccionServer } from './../pages/global';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -19,7 +21,8 @@ import { UsersListPage} from '../pages/users-list/users-list';
 import { ObjectivesListPage} from '../pages/objectives-list/objectives-list';
 import { TaskListPage } from '../pages/task-list/task-list';
 import { ObjetivoPage} from '../pages/objetivo/objetivo';
-const config: SocketIoConfig = { url: 'http://192.168.250.18:3001', options: {} };
+import { SubMenuPage } from '../pages/sub-menu/sub-menu';
+const config: SocketIoConfig = { url: 'http://192.168.250.30:3001', options: {} };
 
 @NgModule({
   declarations: [
@@ -34,7 +37,9 @@ const config: SocketIoConfig = { url: 'http://192.168.250.18:3001', options: {} 
     UsersListPage,
     ObjectivesListPage,
     TaskListPage,
-    ObjetivoPage
+    ObjetivoPage,
+    SubMenuPage,
+    ProjectPage
 
   ],
   imports: [
@@ -57,12 +62,15 @@ const config: SocketIoConfig = { url: 'http://192.168.250.18:3001', options: {} 
     UsersListPage,
     ObjectivesListPage,
     TaskListPage,
-    ObjetivoPage
+    ObjetivoPage,
+    SubMenuPage,
+    ProjectPage
 
   ],
   providers: [
     StatusBar,
     SplashScreen,
+    DireccionServer,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

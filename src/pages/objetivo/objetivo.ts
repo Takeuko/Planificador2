@@ -13,7 +13,6 @@ import { Objective, Task } from '../models';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
 @Component({
   selector: 'page-objetivo',
   templateUrl: 'objetivo.html',

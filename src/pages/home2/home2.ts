@@ -8,7 +8,7 @@ import {Member} from '../register/member';
 import {ProjectRegisterPage} from '../project-register/project-register';
 import {HomePage} from '../home/home';
 
-@IonicPage()
+
 @Component({
   selector: 'page-home2',
   templateUrl: 'home2.html',

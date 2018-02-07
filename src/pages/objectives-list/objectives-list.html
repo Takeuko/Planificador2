@@ -17,7 +17,7 @@
 
     <ion-list>
         <button ion-item *ngFor="let objetivo of objetivos" (click)="verTareas(objetivo)">
-          {{ objetivo.objective }}
+          {{ objetivo.objective + ' ' +(objetivo.percentage | number:'1.0-2' )}} % 
         </button>  
     </ion-list>
 

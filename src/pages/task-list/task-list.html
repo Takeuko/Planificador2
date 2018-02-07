@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{objetivo.objective}}</ion-title>
+    <ion-title>Tareas de {{objetivo.objective}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -17,10 +17,23 @@
 
 <ion-content padding>
 
-  <ion-list>
-    <button ion-item *ngFor="let tarea of tareas">
-      {{ tarea.task }}
-    </button>  
-  </ion-list>
+  
+  <div *ngIf="leader">
+    <ion-item *ngFor="let tarea of tareas; let i=index;">
+        <ion-label>{{ tarea.task }}</ion-label>
+        <ion-checkbox checked={{verificar(i)}} (click)="completarTarea(tarea)">
+        </ion-checkbox>  
+    </ion-item>
+  </div>
+
+  <div *ngIf="!leader">
+    <ion-list>
+      <ion-item *ngFor="let tarea of tareas; let i=index;">
+        <ion-label>{{tarea.task}}</ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+ 
   
 </ion-content>

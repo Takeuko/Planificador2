@@ -1,3 +1,4 @@
+import { DireccionServer } from './../global';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Http } from '@angular/http';
@@ -10,7 +11,7 @@ import { TaskListPage} from '../task-list/task-list';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-objectives-list',
   templateUrl: 'objectives-list.html',
@@ -20,10 +21,13 @@ export class ObjectivesListPage
 
   objetivos:any;
   projectId:number;
-  objetivosUrl:string='http://192.168.250.18/planificador-backend/public/proyectos/objetivos/';
+  objetivosUrl:string= this.Url.Url + 'proyectos/objetivos/';
+  tareasUrl:string= this.Url.Url+'proyectos/objetivos/tareas/';
   name:string;
 
-  constructor(private http:Http, public navCtrl: NavController, public navParams: NavParams) 
+  tareas:any;
+
+  constructor(public Url:DireccionServer, private http:Http, public navCtrl: NavController, public navParams: NavParams, public direcciones:DireccionServer) 
   {
     this.name=this.navParams.get('data')['name'];
   }
@@ -31,8 +35,16 @@ export class ObjectivesListPage
   ionViewWillLoad()
   {
     this.projectId=this.navParams.get('id');
-    this.obtenerObjetivos(this.projectId);
   }
+
+  ionViewWillEnter()
+  {
+
+    this.obtenerObjetivos(this.projectId);
+    //this.obtenerObjetivos(this.projectId);
+  }
+
+  
 
   obtenerObjetivos(proyecto:number)
   {
@@ -47,7 +59,7 @@ export class ObjectivesListPage
 
   verTareas(objetivo)
   {
-    this.navCtrl.push(TaskListPage, {data:objetivo});
+    this.navCtrl.push(TaskListPage, {data:objetivo, proyecto: this.navParams.get('data')});
   }
 
 

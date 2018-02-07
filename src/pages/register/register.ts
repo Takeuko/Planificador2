@@ -1,3 +1,4 @@
+import { DireccionServer } from './../global';
 import { Component, ViewChild } from '@angular/core';
 import { NavController, AlertController,  } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -5,13 +6,14 @@ import { Http, Headers } from '@angular/http';
 import { Member } from './member';
 import 'rxjs/add/operator/toPromise';
 
+
 @Component({
   selector: 'page-home',
   templateUrl: 'register.html'
 })
  export class RegisterPage 
 {
-	url:string='http://localhost/planificador-backend/public/addmember';
+	url:string=this.Url.Url+'addmember';
 	Registro : FormGroup;
 	member:Member=new Member();
 	data:any={};
@@ -25,7 +27,7 @@ import 'rxjs/add/operator/toPromise';
 	@ViewChild('telefono') telefono;
 
 
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController, private http: Http, public FB : FormBuilder) 
+  constructor(public Url:DireccionServer, public navCtrl: NavController, public alertCtrl: AlertController, private http: Http, public FB : FormBuilder) 
   {
 	  this.Registro=this.createMyForm();
 	  this.member=

@@ -1,3 +1,4 @@
+import { DireccionServer } from './../global';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonicPage, NavController,AlertController, NavParams, Slides, Chip, ModalController, Modal } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators, FormArray} from '@angular/forms';
@@ -28,7 +29,7 @@ import { removeArrayItem } from 'ionic-angular/util/util';
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
  */
-@IonicPage()
+
 @Component({
   selector: 'page-project-register',
   templateUrl: 'project-register.html',
@@ -37,7 +38,7 @@ export class ProjectRegisterPage
 {
   Chips: Member[];
 
-  searchUrl:string='http://192.168.250.18/planificador-backend/public/members/';
+  searchUrl:string=this.Url.Url+'members/';
   memberList: any;
   miembrosAñadidos: any;
   nuevoObjetivo:Objective;
@@ -48,13 +49,13 @@ export class ProjectRegisterPage
   private headers = new Headers({'Content-Type': 'application/json; charset=utf-8;'});
 
   @ViewChild(Slides) Slides;
-  registroProject:string ='http://192.168.250.18/planificador-backend/public/registrarproyecto';
+  registroProject:string =this.Url.Url+'/registrarproyecto';
   Project:Project;
   project:FormGroup;
   objetivoModificado:boolean;
   canLeave:boolean;
   mostrarSpinner:boolean;
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public navParams: NavParams, public storage:Storage, public FB : FormBuilder, private http:Http, private modal:ModalController) 
+  constructor(public Url:DireccionServer, public navCtrl: NavController, public alertCtrl: AlertController, public navParams: NavParams, public storage:Storage, public FB : FormBuilder, private http:Http, private modal:ModalController) 
   {
     this.mostrarSpinner=false;
     this.storage.get('member').then(val=>this.leader=val['id']);   
@@ -72,27 +73,48 @@ export class ProjectRegisterPage
 
   ionViewCanLeave(): Promise<any> 
   {
+    let dismiss=0;
     if(this.project.invalid)
     {
       return new Promise((resolve, reject) => {
         let confirm = this.alertCtrl.create({
           title: '¿Salir?',
           subTitle: 'El proyecto no será guardado.',
-          buttons: [{
-            text: 'Sí',
-            handler: () => {
-              resolve();
-            },
+          buttons: [
+            {
+              text: 'Sí',
+              handler: () => 
+              {
+                dismiss=1;
+              },
           }, {
             text: 'No',
             handler: () => {
-              reject();
+              dismiss=2;
             }
           }],
         });
 
-        reject();
+        confirm.onWillDismiss(res=>
+        {
+          if(dismiss==1)
+          {
+            resolve();
+          }
+          else if(dismiss==2)
+          {
+            reject();
+          }
+          else
+          {
+            reject();
+          }
+        });
+        
+
+        
         confirm.present();
+      
       })
     }
    
