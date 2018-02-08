@@ -64,6 +64,17 @@ export class ChatRoomPage {
    
   }
 
+  VerMensajes(id)
+  {
+    this.http.get(this.server.UrlLocal+'/proyecto/chats/mensaje/'+id)
+    .toPromise()
+    .then(respuesta=>{this.messages=respuesta.json();
+      this.scrollDown();
+
+    });
+    
+  }
+
 
   verObjetivos()
   {
@@ -82,11 +93,11 @@ export class ChatRoomPage {
       }, 0);
   }
  
-  sendMessage(input) {
-   
-    
-    
-    this.http.post(this.server.UrlLocal+'proyecto/chats', JSON.stringify({message:this.message, chat_id:this.projectId}),{headers: this.headers})
+  sendMessage(input) 
+  {  
+    let json=JSON.stringify({text:this.message, chat_id:this.projectId, from:this.nickname});
+    console.log(json);
+    this.http.post(this.server.UrlLocal+'proyecto/chats',json ,{headers: this.headers})
     .toPromise()
     .then(
       res=>
@@ -94,13 +105,14 @@ export class ChatRoomPage {
         this.socket.emit('add-message', { text: this.message });
         this.message = '';
         
+        
       }
     );
     this.focus(input);
 
   }
 
-  guar
+ 
 
   scrollDown()
   {
@@ -139,9 +151,14 @@ export class ChatRoomPage {
 
   ionViewDidLoad() 
   {
+
     this.projectId=this.navParams.get('data')['id_proyecto'];
+    this.VerMensajes(this.projectId);
+
     this.nickname=this.navParams.get('nickName');
     this.joinChat();
+    this.scrollDown();
+    
   }
   showToast(msg) {
     let toast = this.toastCtrl.create({
