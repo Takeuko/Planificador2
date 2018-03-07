@@ -48,7 +48,7 @@ export class ProyectosPage
       content: "Espera.."
     });
     loader.present();
-
+console.log(this.proyectosUrl+id);
     this.http.get(this.proyectosUrl+id)
     .toPromise()
     .then(respuesta=>

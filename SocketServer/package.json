@@ -1,14 +1,15 @@
 {
   "name": "socket-server",
   "version": "1.0.0",
-  "description": "el mejor server de todos",
+  "description": "no lo se rick",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "ionic"
-  ],
-  "author": "edo",
-  "license": "MIT"
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2",
+    "socket.io": "^2.0.4"
+  }
 }

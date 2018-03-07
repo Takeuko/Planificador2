@@ -29,7 +29,7 @@ export class ChatRoomPage {
  @ViewChild('content') content:Content;
  @ViewChild('input') input;
 
-  constructor(public server:DireccionServer, public http:Http, private popCtrl:PopoverController, private storage:Storage, private navCtrl: NavController, private navParams: NavParams, private socket: Socket, private toastCtrl: ToastController) 
+  constructor(public Url:DireccionServer, public http:Http, private popCtrl:PopoverController, private storage:Storage, private navCtrl: NavController, private navParams: NavParams, private socket: Socket, private toastCtrl: ToastController) 
   {
     this.leader=false;
     this.nickname = this.navParams.get('nickname');
@@ -66,7 +66,7 @@ export class ChatRoomPage {
 
   VerMensajes(id)
   {
-    this.http.get(this.server.UrlLocal+'/proyecto/chats/mensaje/'+id)
+    this.http.get(this.Url.Url+'/proyecto/chats/mensaje/'+id)
     .toPromise()
     .then(respuesta=>{this.messages=respuesta.json();
       this.scrollDown();
@@ -97,7 +97,7 @@ export class ChatRoomPage {
   {  
     let json=JSON.stringify({text:this.message, chat_id:this.projectId, from:this.nickname});
     console.log(json);
-    this.http.post(this.server.UrlLocal+'proyecto/chats',json ,{headers: this.headers})
+    this.http.post(this.Url.Url+'proyecto/chats',json ,{headers: this.headers})
     .toPromise()
     .then(
       res=>
